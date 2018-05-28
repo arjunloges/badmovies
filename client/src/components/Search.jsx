@@ -1,14 +1,32 @@
 import React from 'react';
+import axios from 'axios';
 
 class Search extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      genres: []
+      genres: [],
+      currentGenre: '12'
     };
+    this.getGenres = this.getGenres.bind(this);
   }
+
+  componentDidMount() {
+    this.getGenres();
+    this.searchGenre();
+  }
+
   getGenres() {
-    //make an axios request in this component to get the list of genres from your endpoint GET GENRES
+    axios.get('/genres')
+    .then((res) => {
+      this.setState ({
+        genres: res.data
+      })
+    })
+  }
+
+  searchGenre() {
+    this.props.getMovies(this.state.currentGenre)
   }
 
   render() {
@@ -20,14 +38,17 @@ class Search extends React.Component {
         {/* Make the select options dynamic from genres !!! */}
         {/* How can you tell which option has been selected from here? */}
 
-        <select>
-          <option value="theway">The Way</option>
-          <option value="thisway">This Way</option>
-          <option value="thatway">That Way</option>
+        <select onChange={(e) => this.setState({currentGenre: e.target.value})}>
+          {this.state.genres.map((genre) => {
+            return (
+              <option value={genre.id}>{genre.name}</option>
+              )
+          }
+          )}
         </select>
         <br/><br/>
 
-        <button>Search</button>
+        <button onClick={() => this.searchGenre()}>Search</button>
 
       </div>
     );
