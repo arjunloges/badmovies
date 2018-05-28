@@ -1,6 +1,7 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 var request = require('request');
+var items = require('./database.js')
 var app = express();
 
 var apiHelpers = require('./apiHelpers.js');
@@ -13,7 +14,7 @@ app.use(express.static(__dirname + '/../client/dist'));
 app.get('/search', function(req, res) {
 	var params = req.query.foo; 
     apiHelpers.searchGenre(params, (response) => {
-    	console.log('inside get in server', response.results)
+    	// console.log('inside get in server', response.results)
     	res.send(response.results);
     })
 });
@@ -25,10 +26,37 @@ app.get('/genres', function(req, res) {
 });
 
 app.post('/save', function(req, res) {
+	// console.log('THIS IS WHAT WE GOT FROM FRONT:', req.body.movie);
+	items.saveFavorite(req.body.movie, (err, results) => {
+		// console.log('INSIDE POST /SAVE:', success);
+		if(err) {
+			console.error(err);
+		}
+		items.getAllFavorites((err, results) => {
+			if(err) {
+				console.error(err);
+			}else {
+			  res.status(200).send(results.body);
+			}
+		})
+	})
 
 });
 
+
 app.post('/delete', function(req, res) {
+  // write delete statement  sending request to database ; 
+  
+
+
+
+  items.getAllFavorites((err, results) => {
+	if(err) {
+		console.error(err);
+	}else {
+		res.status(200).send(results.body);
+	}
+  })
 
 });
 

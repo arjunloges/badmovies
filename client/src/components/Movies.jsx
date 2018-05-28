@@ -3,7 +3,6 @@ import React from 'react';
 class Movies extends React.Component {
   constructor(props) {
     super(props)
-
   }
 
   // Make an onClick for each list item. If the movies shown is the search results, 
@@ -16,10 +15,10 @@ class Movies extends React.Component {
     return (
       <ul className="movies">
 
-        {this.props.movies.map((movie) => {
+        {this.props.movies.map((movie, idx) => {
         return (
-              <li className="movie_item">
-              <img src={movie.poster_path}/>
+              <li key={idx} className="movie_item" onClick={() => (this.props.showFaves ? this.props.deleteMovie(movie) : this.props.saveMovie(movie))}>
+              <img src={`http://image.tmdb.org/t/p/w500${movie.poster_path}`}/>
               <div className="movie_description">
                 <h2>{movie.title}</h2>
                 <section className="movie_details">

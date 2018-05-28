@@ -16,6 +16,7 @@ var getGenres = function(callback) {
   var options = {
     url: `https://api.themoviedb.org/3/genre/movie/list?api_key=${ API_KEY }&language=en-US`,
     headers: {
+      'content-type': 'application/json',
       Authorization: ``
     }
   };
@@ -33,6 +34,7 @@ var searchGenre = function(genre, callback) {
   var options = { 
 	  url: `https://api.themoviedb.org/3/discover/movie?api_key=${ API_KEY }&language=en-US&sort_by=popularity.asc&include_adult=false&include_video=false&page=1&with_genres=${ genre }`,
 	  headers: {
+      'content-type': 'application/json',
 	  	Authorization:``
 	  }
 	};

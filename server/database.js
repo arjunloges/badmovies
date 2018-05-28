@@ -1,38 +1,50 @@
 const mysql = require('mysql');
 const mysqlConfig = require('./config.js');
 
-const connection = mysql.createConnection(mysqlConfig);
-
-// module.exports = {
-//   host: 'localhost',
-//   user: 'root', 
-//   password: '', 
-//   database: 'badmovies',
-//   API_KEY: 'c3013f80cc7cb069f379b2d2fddeda36',
-// };
+const db = mysql.createConnection(mysqlConfig);
 
 
-connection.connect(function(err) {
+
+
+db.connect(function(err) {
   if (err) {
     console.error('error connecting: ' + err.stack);
     return;
   }
 
-  console.log('connected as id ' + connection.threadId);
+  console.log('connected as id ' + db.threadId);
 });
 
 
 
 const getAllFavorites = function(callback) {
-  
+  var queryStr = `SELECT * FROM favorites;`
+  db.query(queryStr, function(err, results){
+    if(err) {
+      console.log('ERROR IN DATABASE.JS:', err); 
+    }
+    callback(results);
+  })
 };
 
-const saveFavorite = function(callback) {
-  // save movie to favorites in the database
+const saveFavorite = function(movie, callback) {
+  var queryStr = `INSERT INTO favorites (id, poster_path, title, release_date, vote_average) VALUES (${movie.id}, '${movie.poster_path}', '${movie.title}', '${movie.release_date}', '${movie.vote_average}');`;
+  db.query(queryStr, function(err, results){
+   if(err) {
+      console.log('ERROR IN DATABASE.JS:', err); 
+    }
+    callback(results);
+  })
 };
 
-const deleteFavorites = function(callback) {
-  // delete a movie from favorites in the database
+const deleteFavorites = function(id, callback) {
+  var queryStr = `DELETE FROM favorites WHERE id = '${movieID}'`;
+  db.query(queryStr, function(err, results){
+    if(err) {
+      console.log('ERROR IN DATABASE.JS:', err); 
+    }
+    callback(results);
+  })
 };
 
 
